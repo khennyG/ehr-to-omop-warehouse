@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="560" viewBox="0 0 1100 560">
+    <defs><filter id="glow_0" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="5" result="blur"/>
+        <feMerge>
+            <feMergeNode in="blur"/>
+            <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+    </filter><filter id="glow_1" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="5" result="blur"/>
+        <feMerge>
+            <feMergeNode in="blur"/>
+            <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+    </filter><filter id="glow_2" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="5" result="blur"/>
+        <feMerge>
+            <feMergeNode in="blur"/>
+            <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+    </filter></defs>
+    <rect width="1100" height="560" fill="#0a0e14"/>
+    
+    <text x="48" y="52" font-family="Menlo, 'SF Mono', Consolas, monospace" font-size="12" letter-spacing="3" fill="#00e5a0">OMOP-CDM</text>
+    <text x="1052" y="52" font-family="Menlo, 'SF Mono', Consolas, monospace" font-size="12" fill="#4a5570" text-anchor="end">SYNTHETIC DEMO DATA</text>
+    <text x="48" y="92" font-family="Georgia, 'Times New Roman', serif" font-size="30" font-weight="bold" fill="#eef2ff">VOCABULARY MAPPING COVERAGE</text>
+    <text x="48" y="118" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="14" fill="#8b96b3">Source codes resolved to standard OMOP concepts, by clinical domain — demo vocabulary seed</text>
+    <line x1="48" y1="136" x2="1052" y2="136" stroke="#232d42" stroke-width="1"/>
+    <path d="M 138.08,421.92 A 130,130 0 1 1 321.92,421.92" stroke="#ff4d5e" stroke-width="14" fill="none" stroke-linecap="round" opacity="0.45"/><path d="M 138.08,421.92 A 130,130 0 1 1 330.76,412.14" stroke="#00e5a0" stroke-width="14" fill="none" stroke-linecap="round" filter="url(#glow_0)"/><text x="216" y="324" font-family="Menlo, 'SF Mono', Consolas, monospace" font-size="46" font-weight="bold" fill="#eef2ff" text-anchor="middle">97.8<tspan font-size="24" dx="2" fill="#8b96b3">%</tspan></text><text x="230" y="358" font-family="Menlo, 'SF Mono', Consolas, monospace" font-size="13" fill="#8b96b3" text-anchor="middle">4,090 / 4,180</text><text x="230" y="430" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="15" letter-spacing="2" fill="#00e5a0" text-anchor="middle" font-weight="bold">CONDITION</text><path d="M 458.08,421.92 A 130,130 0 1 1 641.92,421.92" stroke="#ff4d5e" stroke-width="14" fill="none" stroke-linecap="round" opacity="0.45"/><path d="M 458.08,421.92 A 130,130 0 1 1 649.23,413.98" stroke="#3ddbd9" stroke-width="14" fill="none" stroke-linecap="round" filter="url(#glow_1)"/><text x="536" y="324" font-family="Menlo, 'SF Mono', Consolas, monospace" font-size="46" font-weight="bold" fill="#eef2ff" text-anchor="middle">98.2<tspan font-size="24" dx="2" fill="#8b96b3">%</tspan></text><text x="550" y="358" font-family="Menlo, 'SF Mono', Consolas, monospace" font-size="13" fill="#8b96b3" text-anchor="middle">2,898 / 2,950</text><text x="550" y="430" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="15" letter-spacing="2" fill="#3ddbd9" text-anchor="middle" font-weight="bold">DRUG</text><path d="M 778.08,421.92 A 130,130 0 1 1 961.92,421.92" stroke="#ff4d5e" stroke-width="14" fill="none" stroke-linecap="round" opacity="0.45"/><path d="M 778.08,421.92 A 130,130 0 1 1 961.92,421.92" stroke="#b48cff" stroke-width="14" fill="none" stroke-linecap="round" filter="url(#glow_2)"/><text x="856" y="324" font-family="Menlo, 'SF Mono', Consolas, monospace" font-size="46" font-weight="bold" fill="#eef2ff" text-anchor="middle">100.0<tspan font-size="24" dx="2" fill="#8b96b3">%</tspan></text><text x="870" y="358" font-family="Menlo, 'SF Mono', Consolas, monospace" font-size="13" fill="#8b96b3" text-anchor="middle">413,950 / 413,950</text><text x="870" y="430" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="15" letter-spacing="2" fill="#b48cff" text-anchor="middle" font-weight="bold">MEASUREMENT</text><text x="48" y="510" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="12.5" fill="#4a5570">A demo-scale vocabulary seed deliberately omits a couple of source codes, so this reads as a real gap — not a manufactured 100%.</text><text x="48" y="532" font-family="Menlo, 'SF Mono', Consolas, monospace" font-size="11.5" fill="#4a5570">See docs/adr/0004-synthetic-demo-data-and-vocabulary.md · src/transform/vocabulary_mapper.py</text>
+    </svg>

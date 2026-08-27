@@ -1,0 +1,100 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-type-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: "pip"
+
+      # apache-airflow is deliberately excluded here, same as local
+      # development — its dependency pins collide with pydantic-settings
+      # (see airflow/Dockerfile's own note on why Airflow's dependencies
+      # stay isolated to its own container rather than a shared
+      # environment). The DAG itself is still covered: dag_import_check
+      # below installs apache-airflow into its own throwaway venv, isolated
+      # from this one, purely to confirm the DAG file parses.
+      - name: Install dependencies
+        run: |
+          grep -v -E "^apache-airflow" requirements.txt > requirements-ci.txt
+          pip install -r requirements-ci.txt
+          pip install ruff mypy
+
+      - name: Lint (ruff)
+        run: ruff check .
+
+      - name: Type check (mypy)
+        run: mypy src/
+
+      # The suite runs against the DuckDB backend (src/config/settings.py's
+      # default) — no Postgres service container needed, the same reason
+      # this pipeline is runnable end to end without Docker in local
+      # development at all.
+      - name: Test (pytest)
+        run: pytest tests/ -v --cov=src --cov-report=term-missing
+
+  dag-import-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: "pip"
+
+      - name: Install Airflow
+        run: pip install "apache-airflow==2.7.3" --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-2.7.3/constraints-3.10.txt"
+
+      - name: Verify DAG parses
+        run: |
+          python -c "
+          from airflow.models import DagBag
+          db = DagBag(dag_folder='airflow/dags', include_examples=False)
+          if db.import_errors:
+              raise SystemExit(f'DAG import errors: {db.import_errors}')
+          print(f'{len(db.dags)} DAG(s) parsed cleanly: {list(db.dags)}')
+          "
+
+  dbt-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: "pip"
+
+      - name: Install dbt
+        run: pip install dbt-core dbt-duckdb
+
+      # dbt's dev target reads the same DuckDB file the Python pipeline's
+      # extract/load stages write to (see dbt/README.md) — running the real
+      # pipeline first is what gives dbt something to build against, the
+      # same dependency a local `cd dbt && dbt build` has.
+      - name: Install pipeline dependencies
+        run: |
+          grep -v -E "^apache-airflow" requirements.txt > requirements-ci.txt
+          pip install -r requirements-ci.txt
+
+      - name: Generate demo data and run the pipeline
+        run: |
+          python -m scripts.build_demo_vocabulary
+          python -m scripts.generate_demo_data --population 200
+          python -m src.main --stage all
+
+      - name: dbt build
+        working-directory: dbt
+        run: dbt build --profiles-dir .

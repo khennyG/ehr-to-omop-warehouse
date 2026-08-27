@@ -1,0 +1,45 @@
+[tool.ruff]
+target-version = "py310"
+line-length = 130  # SQL embedded as Python string literals runs long, and
+                    # scripts/demo_codes.py's one-clinical-code-per-line
+                    # catalog is more scannable at a consistent single line
+                    # per entry than wrapped — 130 fits nearly everything in
+                    # this repo without either
+
+[tool.ruff.lint]
+# E/F/W: pyflakes plus the pycodestyle rules pyflakes doesn't cover.
+# I: import sorting. UP: pyupgrade (flags old-style syntax a 3.10+ target
+# doesn't need). DTZ: naive-datetime construction — the one from
+# pylint/flake8-datetimez worth keeping on for a healthcare project, where a
+# silently-local timestamp is a real bug category, not a style nit.
+# Deliberately not enabling the full pylint (PL) set: it flags patterns used
+# on purpose throughout this codebase, most visibly deferred imports inside
+# CLI stage functions (src/main.py) and inside tests that import after
+# monkeypatching settings — both correct here, not something to suppress
+# line by line.
+select = ["E", "F", "I", "UP", "DTZ"]
+
+[tool.ruff.lint.per-file-ignores]
+# Every notebook's first cell does `sys.path.insert(...)` before importing
+# local project modules — there's no package-relative import path available
+# from inside notebooks/, so this is the necessary pattern, not an oversight.
+"notebooks/*.ipynb" = ["E402"]
+# Airflow's own start_date convention is a naive datetime interpreted in the
+# DAG's configured timezone — every Airflow example, including Airflow's own
+# docs, does exactly this; wrapping it in pendulum/tzinfo here would fight
+# the library's own idiom for no behavioral gain on a fixed historical date.
+"airflow/dags/*.py" = ["DTZ001"]
+# Test fixtures are one CREATE TABLE string or one DataFrame row's worth of
+# columns per line on purpose — wrapping a "person_id, gender_concept_id,
+# year_of_birth" dict or a multi-column DDL string mid-literal to satisfy a
+# line-length rule would make these harder to scan, not easier.
+"tests/*.py" = ["E501"]
+
+[tool.mypy]
+python_version = "3.10"
+ignore_missing_imports = true  # loguru, click, great_expectations, duckdb_engine, and
+                                # dbt ship no inline types and no stubs on PyPI as of
+                                # this writing — accommodating that here, once, beats a
+                                # `# type: ignore[import]` on every import line project-wide
+warn_redundant_casts = true
+warn_unused_ignores = true

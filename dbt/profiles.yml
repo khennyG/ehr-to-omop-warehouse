@@ -1,0 +1,28 @@
+# dbt looks for this file at ~/.dbt/profiles.yml by default. Keeping it inside the
+# project instead (set DBT_PROFILES_DIR=./dbt, or run dbt with --profiles-dir dbt)
+# means a clone of this repo doesn't need any machine-specific setup before `dbt run`
+# works — the same reasoning behind WAREHOUSE_BACKEND in src/config/settings.py.
+#
+# dev points at the same local DuckDB file src/config/settings.py's demo backend
+# writes to, so `dbt run` reads the stg_* tables the Python pipeline's extract stage
+# already loaded — no separate warehouse to stand up for local development. prod
+# points at the docker-compose Postgres instance, driven by the same env vars
+# .env.example documents.
+
+ehr_to_omop:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: "../data/processed/omop_demo.duckdb"
+      schema: dbt_staging
+      threads: 4
+    prod:
+      type: postgres
+      host: "{{ env_var('POSTGRES_HOST', 'localhost') }}"
+      user: "{{ env_var('POSTGRES_USER', 'omop') }}"
+      password: "{{ env_var('POSTGRES_PASSWORD', 'omop_dev') }}"
+      port: "{{ env_var('POSTGRES_PORT', '5432') | int }}"
+      dbname: "{{ env_var('POSTGRES_DB', 'omop_cdm') }}"
+      schema: public
+      threads: 4

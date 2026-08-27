@@ -1,0 +1,37 @@
+name: ehr_to_omop
+version: "0.1.0"
+config-version: 2
+
+profile: ehr_to_omop
+
+model-paths: ["models"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+target-path: "target"
+clean-targets: ["target", "dbt_packages"]
+
+# marts targets cdm_dbt, not cdm. src/load/warehouse_loader.py already owns the cdm
+# schema — it's what the Python pipeline this repo actually runs end to end writes
+# to, and what sql/schema/'s foreign keys are built against. Pointing dbt's own
+# +materialized: table marts at that same schema would mean every `dbt run` drops
+# and rebuilds cdm.person from dbt's SQL, silently overwriting whatever the Python
+# pipeline just loaded — two writers racing for the same tables. Building the OMOP
+# transform a second time, in SQL, in a schema of its own, is what this directory is
+# actually for: a declarative, independently-testable alternative to
+# src/transform/omop_transformer.py, not a competing writer into the tables that
+# pipeline owns. dbt's own tests (schema.yml) are what make the comparison useful —
+# if the two implementations disagree, that's a real finding, not a merge conflict.
+models:
+  ehr_to_omop:
+    staging:
+      +schema: staging
+      +materialized: view
+      +tags: ["staging"]
+    intermediate:
+      +schema: intermediate
+      +materialized: table
+      +tags: ["intermediate"]
+    marts:
+      +schema: cdm_dbt
+      +materialized: table
+      +tags: ["marts", "omop"]

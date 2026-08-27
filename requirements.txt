@@ -1,0 +1,45 @@
+# Core
+python-dotenv>=1.0.0
+pydantic>=2.0
+pydantic-settings>=2.0
+
+# Database
+psycopg2-binary>=2.9
+sqlalchemy>=2.0
+duckdb-engine>=0.13  # SQLAlchemy dialect for the local/demo warehouse backend
+
+# Data processing
+pandas>=2.1
+pyarrow>=14.0
+duckdb>=0.9
+
+# Data quality
+# 0.18.x pins altair<5.0, which collides with the altair>=5.2 this project uses
+# for its own charts (see Visualizations in the README) — 1.x dropped that pin.
+great-expectations>=1.0
+
+# Transformation (SQL layer — see dbt/README.md)
+dbt-core>=1.7
+dbt-postgres>=1.7
+dbt-duckdb>=1.7  # local/demo target only; not used by the docker-compose (prod) target
+
+# Orchestration
+apache-airflow>=2.7
+
+# Visualization
+plotly>=5.18
+altair>=5.2
+kaleido>=0.2  # Plotly static export
+jupyter>=1.0
+nbformat>=5.9
+nbclient>=0.9  # programmatic notebook execution — see notebooks/
+
+# Testing
+pytest>=7.4
+pytest-cov>=4.1
+
+# Utilities
+click>=8.1
+loguru>=0.7
+tqdm>=4.66
+pyyaml>=6.0

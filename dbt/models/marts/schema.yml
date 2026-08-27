@@ -1,0 +1,130 @@
+version: 2
+
+models:
+  - name: person
+    description: OMOP person — dbt's SQL-native counterpart to transform_person() in the Python pipeline
+    columns:
+      - name: person_id
+        tests:
+          - unique
+          - not_null
+      - name: gender_concept_id
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [8507, 8532, 0]
+      - name: year_of_birth
+        tests:
+          - not_null
+
+  - name: visit_occurrence
+    description: OMOP visit_occurrence — dbt's SQL-native counterpart to transform_visit_occurrence()
+    columns:
+      - name: visit_occurrence_id
+        tests:
+          - unique
+          - not_null
+      - name: person_id
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('person')
+                field: person_id
+      - name: visit_concept_id
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [9201, 9202, 9203]
+      - name: visit_start_date
+        tests:
+          - not_null
+
+  - name: condition_occurrence
+    description: OMOP condition_occurrence — dbt's SQL-native counterpart to transform_condition_occurrence()
+    columns:
+      - name: condition_occurrence_id
+        tests:
+          - unique
+          - not_null
+      - name: person_id
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('person')
+                field: person_id
+      - name: visit_occurrence_id
+        tests:
+          - relationships:
+              arguments:
+                to: ref('visit_occurrence')
+                field: visit_occurrence_id
+      - name: condition_concept_id
+        tests:
+          - not_null
+      - name: condition_start_date
+        tests:
+          - not_null
+
+  - name: drug_exposure
+    description: OMOP drug_exposure — dbt's SQL-native counterpart to transform_drug_exposure()
+    columns:
+      - name: drug_exposure_id
+        tests:
+          - unique
+          - not_null
+      - name: person_id
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('person')
+                field: person_id
+      - name: visit_occurrence_id
+        tests:
+          - relationships:
+              arguments:
+                to: ref('visit_occurrence')
+                field: visit_occurrence_id
+      - name: drug_concept_id
+        tests:
+          - not_null
+      - name: drug_exposure_start_date
+        tests:
+          - not_null
+      - name: drug_exposure_end_date
+        tests:
+          - not_null
+
+  - name: measurement
+    description: OMOP measurement — dbt's SQL-native counterpart to transform_measurement()
+    columns:
+      - name: measurement_id
+        tests:
+          - unique
+          - not_null
+      - name: person_id
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('person')
+                field: person_id
+      - name: visit_occurrence_id
+        tests:
+          - relationships:
+              arguments:
+                to: ref('visit_occurrence')
+                field: visit_occurrence_id
+      - name: measurement_concept_id
+        tests:
+          - not_null
+      - name: measurement_date
+        tests:
+          - not_null
+      - name: value_as_number
+        tests:
+          - not_null

@@ -1,0 +1,121 @@
+version: 2
+
+sources:
+  - name: synthea
+    description: Raw Synthea CSV files loaded into staging tables
+    schema: "{{ 'main' if target.type == 'duckdb' else 'public' }}"
+    tables:
+      - name: stg_patients
+        description: Raw patient demographics from Synthea
+        columns:
+          - name: Id
+            tests:
+              - unique
+              - not_null
+      - name: stg_encounters
+        description: Raw encounter records from Synthea
+        columns:
+          - name: Id
+            tests:
+              - unique
+              - not_null
+      - name: stg_conditions
+        description: Raw condition records from Synthea
+      - name: stg_medications
+        description: Raw medication records from Synthea
+      - name: stg_observations
+        description: Raw observation/lab records from Synthea
+      - name: stg_procedures
+        description: Raw procedure records from Synthea
+
+models:
+  - name: stg_patients
+    description: Cleaned and type-cast patient demographics
+    columns:
+      - name: patient_id
+        description: Unique patient identifier (Synthea UUID)
+        tests:
+          - unique
+          - not_null
+      - name: birth_date
+        tests:
+          - not_null
+      - name: gender
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["M", "F"]
+
+  - name: stg_encounters
+    description: Cleaned and type-cast encounter records
+    columns:
+      - name: encounter_id
+        description: Unique encounter identifier (Synthea UUID)
+        tests:
+          - unique
+          - not_null
+      - name: patient_id
+        tests:
+          - not_null
+      - name: start_datetime
+        tests:
+          - not_null
+      - name: encounter_class
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["ambulatory", "outpatient", "inpatient", "emergency", "urgentcare", "wellness"]
+
+  - name: stg_conditions
+    description: Cleaned and type-cast condition records
+    columns:
+      - name: patient_id
+        tests:
+          - not_null
+      - name: encounter_id
+        tests:
+          - not_null
+      - name: condition_start_date
+        tests:
+          - not_null
+      - name: condition_code
+        tests:
+          - not_null
+
+  - name: stg_medications
+    description: Cleaned and type-cast medication records
+    columns:
+      - name: patient_id
+        tests:
+          - not_null
+      - name: medication_code
+        tests:
+          - not_null
+      - name: dispenses
+        tests:
+          - not_null
+
+  - name: stg_observations
+    description: Cleaned and type-cast observation/lab records
+    columns:
+      - name: patient_id
+        tests:
+          - not_null
+      - name: observation_code
+        tests:
+          - not_null
+      - name: observation_datetime
+        tests:
+          - not_null
+
+  - name: stg_procedures
+    description: Cleaned and type-cast procedure records
+    columns:
+      - name: patient_id
+        tests:
+          - not_null
+      - name: procedure_code
+        tests:
+          - not_null

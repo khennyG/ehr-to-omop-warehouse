@@ -1,0 +1,48 @@
+version: 2
+
+sources:
+  - name: cdm_vocabulary
+    description: >
+      Vocabulary tables in the cdm schema, populated by
+      src/load/warehouse_loader.py's load_vocabulary() — not by dbt. This
+      source declaration is what lets the intermediate models resolve codes
+      against the same concept / concept_relationship data the Python
+      pipeline's VocabularyMapper uses, without dbt ever writing to them.
+    schema: cdm
+    tables:
+      - name: concept
+      - name: concept_relationship
+
+models:
+  - name: int_conditions_mapped
+    description: Conditions with source and standard concept_ids resolved, deduplicated
+    columns:
+      - name: patient_id
+        tests:
+          - not_null
+      - name: condition_concept_id
+        tests:
+          - not_null
+
+  - name: int_drug_exposures_mapped
+    description: Medications with source and standard concept_ids resolved
+    columns:
+      - name: patient_id
+        tests:
+          - not_null
+      - name: drug_concept_id
+        tests:
+          - not_null
+      - name: end_datetime
+        tests:
+          - not_null
+
+  - name: int_measurements_mapped
+    description: Numeric observations with source and standard concept_ids resolved
+    columns:
+      - name: patient_id
+        tests:
+          - not_null
+      - name: value_as_number
+        tests:
+          - not_null
