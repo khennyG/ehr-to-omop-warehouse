@@ -57,7 +57,7 @@ Synthea CSVs ──▶ Extract ──▶ Transform ──▶ Load ──▶ Qual
                                           cdm_dbt schema)
                                                   │
                                                   ▼
-                                        Cohort engine + 5 hand-built
+                                        Cohort engine + 6 hand-built
                                         SVG visualizations (notebooks/)
 ```
 
@@ -80,7 +80,7 @@ orchestrator at all.
 | Cohort analytics | A domain-agnostic temporal cohort engine (not three hardcoded phenotypes) supporting index→outcome, potency-ladder sequences, and peak-concurrency queries |
 | Orchestration | A real Airflow DAG, verified to parse via `DagBag`, with a custom Dockerfile since the base Airflow image has neither this project's dependencies nor dbt |
 | Testing | 43 tests: unit tests against real embedded databases (not mocks), a full end-to-end integration test through the actual CLI entrypoint |
-| Visualization | 5 hand-built SVG charts generated from notebooks — no chart-library defaults — where the geometry (a gauge arc, an EKG trace, a telemetry spike) is the actual data encoding, not decoration on top of it |
+| Visualization | 6 hand-built SVG charts generated from notebooks — no chart-library defaults — where the geometry (a gauge arc, an EKG trace, a telemetry spike) is the actual data encoding, not decoration on top of it |
 
 ---
 
@@ -291,18 +291,18 @@ ran:
 
 ## Visualizations
 
-The first pass at these five charts used Plotly — a Sankey, a heatmap, a funnel, a
-Gantt bar, a pyramid — reskinned with a validated colorblind-safe palette. They were
+The first pass at these charts used Plotly — a Sankey, a heatmap, a funnel, a Gantt
+bar, a pyramid — reskinned with a validated colorblind-safe palette. They were
 accurate, and they looked like every other data-journalism chart built the same way,
 because that's what those forms are: correct, general-purpose, and generic. I went
 looking at how The Pudding thinks about this (their own "How to Make Dope Shit"
 series) and kept landing on the same idea from different angles: the chart form
 should come from the subject, not from a library's chart-type picker. So I rebuilt
-all five as hand-written SVG — no chart library at all — built around the one shape
-that already means "this is about a patient's vitals" to almost anyone: an EKG trace.
-Every waveform, gauge arc, and telemetry spike below is real geometry computed from
-the actual numbers in `data/processed/omop_demo.duckdb`, not a decorative skin over
-a default chart type — in three of the five, the trace's shape isn't stylistic at
+all of them as hand-written SVG — no chart library at all — built around the one
+shape that already means "this is about a patient's vitals" to almost anyone: an EKG
+trace. Every waveform, gauge arc, and telemetry spike below is real geometry computed
+from the actual numbers in `data/processed/omop_demo.duckdb`, not a decorative skin
+over a default chart type — in four of the six, the trace's shape isn't stylistic at
 all, it's how the data is encoded. Rendered with `cairosvg` straight to PNG; no
 browser involved. Generated from the notebooks in `notebooks/`, saved into
 `docs/assets/visualizations/` as matched `.svg`/`.png` pairs.
@@ -333,6 +333,19 @@ would show up here first — which is why the ~20%-under-18 band gets called out
 directly on the chart rather than left for the reader to notice on their own.
 
 ![Population Demographics](docs/assets/visualizations/population_pyramid.png)
+
+**Pipeline cross-check** — the odd one out, and the one chart here that isn't
+covering a Plotly original: this project builds the OMOP transform twice, once in
+pandas (`src/transform/`) and once independently in dbt (`dbt/models/marts/`), and
+the two landing on identical row counts is real evidence both are correct, not just
+self-consistent (see [ADR 0002](docs/adr/0002-dbt-independent-implementation.md)).
+That's a question of identity, not magnitude, so a bar chart is the wrong form for
+it — instead, each table gets the same EKG waveform traced twice, once per pipeline,
+from an identical jitter seed, offset by two pixels. Where the two pipelines agree,
+both colors peek out along a single shared line; a real mismatch would pull the two
+traces apart instead of hiding behind two numbers a reader has to compare by eye.
+
+![Pipeline Cross-Check](docs/assets/visualizations/pipeline_crosscheck.png)
 
 ---
 
@@ -410,7 +423,7 @@ ehr-to-omop-warehouse/
 ├── airflow/dags/        The production orchestration DAG
 ├── sql/schema/          Full OMOP CDM v5.4 DDL (37 tables)
 ├── scripts/             Demo data/vocabulary generators + real Synthea/Athena wrappers
-├── notebooks/           The 5 visualizations, as executed Jupyter notebooks
+├── notebooks/           The 6 visualizations, as executed Jupyter notebooks
 ├── docs/
 │   ├── adr/             Architecture decision records
 │   └── assets/          Exported chart SVG + PNG
