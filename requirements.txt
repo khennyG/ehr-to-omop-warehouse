@@ -14,9 +14,11 @@ pyarrow>=14.0
 duckdb>=0.9
 
 # Data quality
-# 0.18.x pins altair<5.0, which collides with the altair>=5.2 this project uses
-# for its own charts (see Visualizations in the README) — 1.x dropped that pin.
+# 0.18.x pins altair<5.0, which collided with a newer altair this project used
+# to need directly for its own charts — 1.x dropped that pin. altair itself is
+# now only a transitive dependency of great-expectations' own data docs.
 great-expectations>=1.0
+altair>=5.2
 
 # Transformation (SQL layer — see dbt/README.md)
 dbt-core>=1.7
@@ -26,10 +28,9 @@ dbt-duckdb>=1.7  # local/demo target only; not used by the docker-compose (prod)
 # Orchestration
 apache-airflow>=2.7
 
-# Visualization
-plotly>=5.18
-altair>=5.2
-kaleido>=0.2  # Plotly static export
+# Visualization — hand-built SVG (see notebooks/dope_viz.py), rasterized
+# without a browser
+cairosvg>=2.7
 jupyter>=1.0
 nbformat>=5.9
 nbclient>=0.9  # programmatic notebook execution — see notebooks/
