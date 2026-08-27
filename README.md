@@ -413,7 +413,7 @@ ehr-to-omop-warehouse/
 ├── notebooks/           The 5 visualizations, as executed Jupyter notebooks
 ├── docs/
 │   ├── adr/             Architecture decision records
-│   └── assets/          Exported chart HTML + PNG
+│   └── assets/          Exported chart SVG + PNG
 └── tests/               43 tests, against real embedded databases
 ```
 
