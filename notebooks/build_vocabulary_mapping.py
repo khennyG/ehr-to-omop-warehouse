@@ -1,10 +1,23 @@
 import sys
+
 sys.path.insert(0, "notebooks")
 sys.path.insert(0, ".")
 import duckdb
 from dope_viz import (
-    FONT_BODY, FONT_MONO, INK, INK_DIM, INK_FAINT, MONITOR_CYAN, MONITOR_GREEN,
-    MONITOR_RED, MONITOR_VIOLET, gauge_arc, glow_filter, header_block, save, svg_document,
+    FONT_BODY,
+    FONT_MONO,
+    INK,
+    INK_DIM,
+    INK_FAINT,
+    MONITOR_CYAN,
+    MONITOR_GREEN,
+    MONITOR_RED,
+    MONITOR_VIOLET,
+    gauge_arc,
+    glow_filter,
+    header_block,
+    save,
+    svg_document,
 )
 
 con = duckdb.connect("data/processed/omop_demo.duckdb")

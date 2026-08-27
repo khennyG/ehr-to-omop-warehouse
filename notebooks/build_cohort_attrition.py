@@ -1,12 +1,26 @@
 import sys
+
 sys.path.insert(0, "notebooks")
 sys.path.insert(0, ".")
+from dope_viz import (
+    FONT_BODY,
+    FONT_MONO,
+    GRID,
+    INK,
+    INK_DIM,
+    INK_FAINT,
+    MONITOR_AMBER,
+    MONITOR_GREEN,
+    MONITOR_VIOLET,
+    flatline_decay_path,
+    glow_filter,
+    header_block,
+    save,
+    svg_document,
+)
+
 from src.analytics.cohort_builder import CohortBuilder
 from src.analytics.predefined_cohorts import run_all
-from dope_viz import (
-    FONT_BODY, FONT_MONO, GRID, INK, INK_DIM, INK_FAINT, MONITOR_AMBER, MONITOR_GREEN,
-    MONITOR_VIOLET, flatline_decay_path, glow_filter, header_block, save, svg_document,
-)
 
 builder = CohortBuilder()
 results = run_all(builder)

@@ -1,15 +1,29 @@
 import sys
+
 sys.path.insert(0, "notebooks")
 sys.path.insert(0, ".")
 from pathlib import Path
 
 import pandas as pd
-from sqlalchemy import create_engine, text
-from src.config.settings import settings
 from dope_viz import (
-    FONT_BODY, FONT_HEAD, FONT_MONO, GRID, GRID_STRONG, INK, INK_DIM, INK_FAINT,
-    MONITOR_BLUE, MONITOR_VIOLET, glow_filter, header_block, save, svg_document,
+    FONT_BODY,
+    FONT_HEAD,
+    FONT_MONO,
+    GRID,
+    GRID_STRONG,
+    INK,
+    INK_DIM,
+    INK_FAINT,
+    MONITOR_BLUE,
+    MONITOR_VIOLET,
+    glow_filter,
+    header_block,
+    save,
+    svg_document,
 )
+from sqlalchemy import create_engine, text
+
+from src.config.settings import settings
 
 settings.duckdb_path = Path("data/processed/omop_demo.duckdb")
 engine = create_engine(settings.database_url)

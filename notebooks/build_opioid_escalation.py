@@ -1,14 +1,28 @@
 import sys
+
 sys.path.insert(0, "notebooks")
 sys.path.insert(0, ".")
 import pandas as pd
-from sqlalchemy import text as sqltext
-from src.analytics.cohort_builder import CohortBuilder
-from src.analytics.predefined_cohorts import run_all, OPIOID_LADDER_TERMS
 from dope_viz import (
-    FONT_BODY, FONT_MONO, GRID, GRID_STRONG, INK_DIM, INK_FAINT, MONITOR_AMBER, MONITOR_CYAN,
-    MONITOR_GREEN, MONITOR_RED, glow_filter, header_block, save, svg_document,
+    FONT_BODY,
+    FONT_MONO,
+    GRID,
+    GRID_STRONG,
+    INK_DIM,
+    INK_FAINT,
+    MONITOR_AMBER,
+    MONITOR_CYAN,
+    MONITOR_GREEN,
+    MONITOR_RED,
+    glow_filter,
+    header_block,
+    save,
+    svg_document,
 )
+from sqlalchemy import text as sqltext
+
+from src.analytics.cohort_builder import CohortBuilder
+from src.analytics.predefined_cohorts import OPIOID_LADDER_TERMS, run_all
 
 builder = CohortBuilder()
 results = run_all(builder)

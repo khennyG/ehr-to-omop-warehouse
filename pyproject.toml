@@ -34,6 +34,12 @@ select = ["E", "F", "I", "UP", "DTZ"]
 # year_of_birth" dict or a multi-column DDL string mid-literal to satisfy a
 # line-length rule would make these harder to scan, not easier.
 "tests/*.py" = ["E501"]
+# These build the project's SVG charts as raw markup strings (see
+# notebooks/dope_viz.py's module docstring) — one f-string is one <text> or
+# <path> element, and breaking an element's attributes across lines to fit
+# 130 columns would fragment markup that's meant to be scanned as a unit.
+"notebooks/dope_viz.py" = ["E501"]
+"notebooks/build_*.py" = ["E501"]
 
 [tool.mypy]
 python_version = "3.10"

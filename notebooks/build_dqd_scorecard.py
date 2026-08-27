@@ -1,11 +1,26 @@
 import sys
+
 sys.path.insert(0, "notebooks")
 sys.path.insert(0, ".")
-from src.quality.dqd_checks import DQDChecker
 from dope_viz import (
-    BG_PANEL, FONT_BODY, FONT_MONO, GRID_STRONG, INK, INK_DIM, INK_FAINT, MONITOR_AMBER,
-    MONITOR_GREEN, MONITOR_RED, ekg_waveform_path, glow_filter, header_block, save, svg_document,
+    BG_PANEL,
+    FONT_BODY,
+    FONT_MONO,
+    GRID_STRONG,
+    INK,
+    INK_DIM,
+    INK_FAINT,
+    MONITOR_AMBER,
+    MONITOR_GREEN,
+    MONITOR_RED,
+    ekg_waveform_path,
+    glow_filter,
+    header_block,
+    save,
+    svg_document,
 )
+
+from src.quality.dqd_checks import DQDChecker
 
 checker = DQDChecker()
 checker.run_all()
